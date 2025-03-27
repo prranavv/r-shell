@@ -1,4 +1,4 @@
-use std::{env, io::{stdin, stdout, Write}, path::Path, process::Command};
+use std::{env, fs, io::{stdin, stdout, Write}, path::Path, process::Command};
 
 use pathsearch::find_executable_in_path;
 
@@ -64,6 +64,16 @@ fn read_event_loop(){
                         }
                     }
                 }
+            }
+
+            Some("ls")=>{
+                let path = env::current_dir().unwrap();
+                let files =fs::read_dir(path).unwrap();
+                for file in files{
+                    let f=file.unwrap();
+                    print!("{} ",f.file_name().into_string().unwrap());
+                }
+                println!("")
             }
 
             Some(val)=>{
