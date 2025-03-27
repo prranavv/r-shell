@@ -43,7 +43,7 @@ fn read_event_loop(){
             Some("cd")=>{
                 match tail.as_str(){
                     "~"=>{
-                        let path = Path::new("");
+                        let path = Path::new("/home/pranav");
                         let result = env::set_current_dir(path);
                         match result{
                             Err(_)=>{
@@ -70,8 +70,9 @@ fn read_event_loop(){
                 let path = env::current_dir().unwrap();
                 let files =fs::read_dir(path).unwrap();
                 for file in files{
-                    let f=file.unwrap();
-                    print!("{} ",f.file_name().into_string().unwrap());
+                    if let Ok(file)=file{
+                        print!("{} ",file.file_name().into_string().unwrap())
+                    }
                 }
                 println!("")
             }
