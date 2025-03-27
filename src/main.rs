@@ -1,4 +1,6 @@
-use std::{env, io::{stdin, stdout, Write}, path::Path};
+use std::{env, io::{stdin, stdout, Write}, path::Path, process::Command};
+
+use pathsearch::find_executable_in_path;
 
 fn read_event_loop(){
     loop{
@@ -64,10 +66,30 @@ fn read_event_loop(){
                 }
             }
 
+            Some(val)=>{
+                match find_executable_in_path(val){
+                    Some(_)=>{
+                        run_binary(val,&tail);
+                    }
+
+                    None=>println!("{}: command not found",input.trim())
+                }
+            }
+
             _=>{
                 println!("{}: command not found.",input.trim())
             }
         }
+    }
+}
+
+
+fn run_binary(binary: &str,arg: &str){
+    let child= Command::new(binary).arg(arg).output().unwrap();
+    if child.status.success(){
+    println!("{}",String::from_utf8_lossy(&child.stdout))
+    }else {
+        eprintln!("{}",String::from_utf8_lossy(&child.stderr))
     }
 }
 
